@@ -48,7 +48,7 @@ add_homebrew_tap() {
 # Function to install Homebrew packages
 install_homebrew_packages() {
   FORMULAE=(neovim fd ripgrep fish ag stow nmap neovide lazygit)
-  CASKS=(anki) # neovide is a cask but installs better as a formulae
+  CASKS=(anki nikitabobko/tap/aerospace) # neovide is a cask but installs better as a formulae
 
   print_message "Installing Homebrew formulae..."
   for formula in "${FORMULAE[@]}"; do
@@ -71,18 +71,6 @@ install_homebrew_packages() {
     fi
   done
 
-  # Install aerospace cask from the specific tap
-  AEROSPACE_CASK="aerospace"
-  if brew list --cask | grep -q "^${AEROSPACE_CASK}\$"; then
-    echo "Cask '${AEROSPACE_CASK}' from 'nikitabobko/tap/aerospace' is already installed."
-  else
-    brew install --cask "nikitabobko/tap/aerospace/${AEROSPACE_CASK}"
-    echo "Installed '${AEROSPACE_CASK}' from 'nikitabobko/tap/aerospace'."
-  fi
-  print_message "Homebrew casks installation complete."
-}
-
-# Function to set Fish as the default shell
 set_fish_as_default_shell() {
   FISH_PATH="$(which fish)"
 
