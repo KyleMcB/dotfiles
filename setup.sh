@@ -88,12 +88,18 @@ set_fish_as_default_shell() {
   fi
 }
 
+use_stow() {
+  print_message "linking via stow"
+  stow ./*/ 
+}
+
 # Main function to orchestrate setup
 main() {
   install_homebrew
   add_homebrew_tap
   install_homebrew_packages
   set_fish_as_default_shell
+  use_stow
 
   print_message "System setup complete!"
 }
