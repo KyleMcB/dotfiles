@@ -48,7 +48,7 @@ add_homebrew_tap() {
 # Function to install Homebrew packages
 install_homebrew_packages() {
   FORMULAE=(neovim fd ripgrep fish ag stow nmap neovide lazygit)
-  # CASKS=(neovide) # neovide is a cask but installs better as a formulae
+  CASKS=(anki) # neovide is a cask but installs better as a formulae
 
   print_message "Installing Homebrew formulae..."
   for formula in "${FORMULAE[@]}"; do
