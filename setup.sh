@@ -99,9 +99,10 @@ main() {
   add_homebrew_tap
   install_homebrew_packages
   set_fish_as_default_shell
-  use_stow
+#  use_stow
+#  
 
-  print_message "System setup complete!"
+  print_message "System setup complete! please choose a branch and use stow to install config files"
 }
 
 # Execute main function
