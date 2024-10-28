@@ -13,3 +13,4 @@ if not contains /opt/homebrew/share/info $INFOPATH
 end
 set -g fish_key_bindings fish_vi_key_bindings
 fzf --fish | source
+fish_vi_key_bindings
