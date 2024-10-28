@@ -12,3 +12,4 @@ if not contains /opt/homebrew/share/info $INFOPATH
     set --global --export INFOPATH /opt/homebrew/share/info $INFOPATH
 end
 set -g fish_key_bindings fish_vi_key_bindings
+fzf --fish | source
