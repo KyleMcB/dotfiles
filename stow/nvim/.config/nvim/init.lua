@@ -30,3 +30,17 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
     autosave_timer:close()
   end,
 })
+-- Ensure Comment.nvim is loaded
+local comment_api = require("Comment.api")
+
+-- Remap <leader>cc to toggle comment on the current line (normal mode) or selected lines (visual mode)
+vim.keymap.set("n", "<leader>ck", function()
+  comment_api.toggle.linewise.current()
+end, { noremap = true, silent = true, desc = "Toggle comment on current line" })
+
+vim.keymap.set(
+  "v",
+  "<leader>ck",
+  "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
+  { noremap = true, silent = true, desc = "Toggle comment on selected lines" }
+)
