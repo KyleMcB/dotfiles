@@ -44,3 +44,92 @@ vim.keymap.set(
   "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
   { noremap = true, silent = true, desc = "Toggle comment on selected lines" }
 )
+local telescope = require("telescope.builtin")
+
+-- Custom function to search only Swift files
+function live_grep_swift()
+  telescope.live_grep({
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "-t",
+      "swift", -- Limit search to Swift files
+    },
+  })
+end
+
+-- Map it to a convenient keybinding
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>fs",
+  "<cmd>lua live_grep_swift()<CR>",
+  { noremap = true, silent = true, desc = "search text in swift files" }
+)
+
+local pickers = require("telescope.pickers")
+local finders = require("telescope.finders")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+
+-- Custom function to search with a file type prompt
+function live_grep_with_type_prompt()
+  -- Run `rg --type-list` to get all supported file types
+  local handle = io.popen("rg --type-list")
+  local result = handle:read("*a")
+  handle:close()
+
+  -- Parse file types from rg output
+  local types = {}
+  for line in result:gmatch("[^\r\n]+") do
+    local type_name = line:match("^(%w+):")
+    if type_name then
+      table.insert(types, type_name)
+    end
+  end
+
+  -- Use Telescope picker to select a file type
+  pickers
+    .new({}, {
+      prompt_title = "Select File Type",
+      finder = finders.new_table({
+        results = types,
+      }),
+      sorter = require("telescope.config").values.generic_sorter({}),
+      attach_mappings = function(prompt_bufnr, map)
+        actions.select_default:replace(function()
+          actions.close(prompt_bufnr)
+          local selection = action_state.get_selected_entry()
+          if selection then
+            -- Run live_grep with the selected file type
+            require("telescope.builtin").live_grep({
+              vimgrep_arguments = {
+                "rg",
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+                "--smart-case",
+                "-t",
+                selection[1], -- Apply the selected file type filter
+              },
+            })
+          end
+        end)
+        return true
+      end,
+    })
+    :find()
+end
+-- Use Telescope to select a file type
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>t",
+  "<cmd>lua live_grep_with_type_prompt()<CR>",
+  { noremap = true, silent = true, desc = "select type then ripgrep for on that type" }
+)
